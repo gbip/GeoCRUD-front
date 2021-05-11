@@ -1,4 +1,4 @@
-# Terralego Admin
+# GeoCRUD-front
 
 ## Install
 

@@ -21,7 +21,7 @@ export const Main = ({ locale }) => {
   const { authenticated } = useContext(AuthContext);
 
   const {
-    env: { title = 'Terralego Admin', favicon, language } = {},
+    env: { title = 'GeoCRUD', favicon, language } = {},
     errorSettings: { message: errorMessage } = {},
   } = useContext(AppContext);
 

@@ -28,7 +28,7 @@
     "linkSave": "Save"
   },
   "main": {
-    "title": "Terralego"
+    "title": "GeoCRUD"
   },
   "gl-pathControl": {
     "followDirection": "Follow direction",
