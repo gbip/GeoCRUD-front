@@ -7,7 +7,6 @@ import { withTranslation } from 'react-i18next';
 import { Tree } from '@blueprintjs/core';
 import compose from '../../../utils/compose';
 import { withPermissions, withEnabledModules } from '../../../hoc/withUserSettings';
-import useBeta from '../../../hooks/useBeta';
 
 const byPermissions = permissions => ({ requiredPermissions }) => {
   if (!requiredPermissions) {
@@ -29,12 +28,10 @@ const menuToTreeContents = (
   t = text => text,
   permissions = [],
   enabledModules = [],
-  showBeta = false,
 ) =>
   menu
     .filter(byPermissions(permissions))
     .filter(byModule(enabledModules))
-    .filter(({ beta }) => !beta || showBeta)
     .map(({ items = [], label, href, ...rest }, index) => ({
       id: index,
       isExpanded: true,
@@ -44,7 +41,7 @@ const menuToTreeContents = (
         : t(label),
 
       ...(items.length ? {
-        childNodes: menuToTreeContents(items, t, permissions, enabledModules, showBeta),
+        childNodes: menuToTreeContents(items, t, permissions, enabledModules),
         icon: 'folder-close',
       } : {}),
 
@@ -52,9 +49,8 @@ const menuToTreeContents = (
     }));
 
 export const AppSummary = ({ t, menu, permissions, enabledModules }) => {
-  const beta = useBeta();
   return (
-    <Tree contents={menuToTreeContents(menu, t, permissions, enabledModules, beta)} />
+    <Tree contents={menuToTreeContents(menu, t, permissions, enabledModules)} />
   );
 };
 
