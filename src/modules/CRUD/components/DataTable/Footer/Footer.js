@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactPaginate from 'react-paginate';
-import { parseUrl } from 'query-string';
 
 import {
   Alignment,
@@ -20,8 +19,8 @@ const getPageFromUrl = string => {
   if (string === null) {
     return null;
   }
-  const { query: { page } } = parseUrl(string);
-  return Number(page);
+  const searchParams = new URLSearchParams(string);
+  return Number(searchParams.get('page'));
 };
 
 const getCurrentPage = (prevPage, nextPage) => {

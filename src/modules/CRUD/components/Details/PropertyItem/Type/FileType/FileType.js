@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { parseUrl } from 'query-string';
 import NoValue from '../../NoValue';
 
 const getFileName = src => {
-  const { url } = parseUrl(src);
-  return decodeURIComponent(url.split('/').pop());
+  return decodeURIComponent(src.split('/').pop());
 };
 
 const FileType = ({
