@@ -1,6 +1,5 @@
 import Api from '@terralego/core/modules/Api';
-import { geomTypes } from '../../RA/DataSource/index';
-
+import { geomTypes } from '../../../utils/geom';
 
 import {
   POINT,
@@ -17,11 +16,9 @@ export const getObjectOrderedValue = (objectValues, arrayOrder = []) => {
     return {};
   }
   const UIOrderReverse = [...arrayOrder].reverse();
-  return Object.keys(objectValues).sort(
-    ((a, b) => UIOrderReverse.indexOf(b) - UIOrderReverse.indexOf(a)),
-  ).reduce((acc, prop) => (
-    { ...acc, [prop]: objectValues[prop] }
-  ), {});
+  return Object.keys(objectValues)
+    .sort((a, b) => UIOrderReverse.indexOf(b) - UIOrderReverse.indexOf(a))
+    .reduce((acc, prop) => ({ ...acc, [prop]: objectValues[prop] }), {});
 };
 
 export const isTableObject = (arrayOfObjects = []) => {
@@ -49,7 +46,6 @@ export const exportFileFromURL = async (url, name) => {
   link.href = global.URL.createObjectURL(file);
   link.click();
 };
-
 
 const getSchemaCoordinates = coordinates => {
   if (!Array.isArray(coordinates[0])) {
@@ -103,13 +99,12 @@ export const getJSONSchemaFromGeom = (
   const type = geomTypes[geomType];
   const value = geom || { type, coordinates: [] };
   const { coordinates } = geom || {};
-  const coordinatesCalculated = coordinates && coordinates.length
-    ? coordinates
-    : getDefaultCoordinatesByGeomType(geomType);
+  const coordinatesCalculated =
+    coordinates && coordinates.length ? coordinates : getDefaultCoordinatesByGeomType(geomType);
   return {
     ...rest,
     display_value: value,
-    method: (identifier !== null) ? 'PATCH' : 'POST',
+    method: identifier !== null ? 'PATCH' : 'POST',
     schema: {
       properties: {
         type: {
@@ -147,25 +142,28 @@ export const getJSONSchemaFromGeom = (
  * @returns {Object} JSON schema properties cleaned
  */
 export const requiredProperties = props => {
-  const propertiesWithoutGroup = Object.values(props).reduce((list, value) => {
-    const { type, properties, required = [] } = value;
+  const propertiesWithoutGroup = Object.values(props).reduce(
+    (list, value) => {
+      const { type, properties, required = [] } = value;
 
-    if (type === 'object' && required.length) {
-      const requiredProps = Object.entries(properties).reduce((acc, [subKey, subValue]) => (
-        required.includes(subKey)
-          ? ({ ...acc, [subKey]: subValue })
-          : acc
-      ), {});
+      if (type === 'object' && required.length) {
+        const requiredProps = Object.entries(properties).reduce(
+          (acc, [subKey, subValue]) =>
+            required.includes(subKey) ? { ...acc, [subKey]: subValue } : acc,
+          {}
+        );
 
-      return {
-        ...list,
-        properties: { ...list.properties, ...requiredProps },
-        required: [...list.required, ...required],
-      };
-    }
+        return {
+          ...list,
+          properties: { ...list.properties, ...requiredProps },
+          required: [...list.required, ...required],
+        };
+      }
 
-    return list;
-  }, { properties: {}, required: [] });
+      return list;
+    },
+    { properties: {}, required: [] }
+  );
 
   return propertiesWithoutGroup;
 };

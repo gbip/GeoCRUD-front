@@ -8,7 +8,27 @@ export const MULTI_POLYGON = 6;
 export const GEOMETRY_COLLECTION = 7;
 export const GEOM_UNDEFINED = '8';
 
-export const geomTypeList = ['Point', 'LineString', 'LinearRing', 'Polygon', 'MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'];
+export const geomTypes = {
+  [POINT]: 'Point',
+  [LINESTRING]: 'LineString',
+  // 2: 'LinearRi',
+  [POLYGON]: 'Polygon',
+  [MULTI_POINT]: 'MultiPoint',
+  [MULTI_LINESTRING]: 'MultiLineString',
+  [MULTI_POLYGON]: 'MultiPolygon',
+  [GEOMETRY_COLLECTION]: 'GeometryCollection',
+};
+
+export const geomTypeList = [
+  'Point',
+  'LineString',
+  'LinearRing',
+  'Polygon',
+  'MultiPoint',
+  'MultiLineString',
+  'MultiPolygon',
+  'GeometryCollection',
+];
 
 export const getShapeFromGeomType = geomType => {
   switch (geomType) {

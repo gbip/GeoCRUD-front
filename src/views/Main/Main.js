@@ -46,15 +46,11 @@ export const Main = ({ locale }) => {
         <meta property="og:title" content={title} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={global.location.href} />
-        {!!favicon && (
-        <link rel="shortcut icon" href={favicon} />
-        )}
+        {!!favicon && <link rel="shortcut icon" href={favicon} />}
       </Helmet>
       <Header />
       <div className="main-container">
-        {authenticated
-          ? <Content />
-          : <LoginForm translate={t} />}
+        {authenticated ? <Content /> : <LoginForm translate={t} />}
       </div>
     </div>
   );

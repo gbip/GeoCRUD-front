@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import geojsonExtent from '@mapbox/geojson-extent';
-import { geomTypes } from '../../../../../../../RA/DataSource/index';
-
+import { geomTypes } from '../../../../../../../../utils/geom';
 
 const getCoordinatesFromType = (type, coordinates) => {
   if (type === 'MultiPolygon') {
@@ -13,7 +12,6 @@ const getCoordinatesFromType = (type, coordinates) => {
   }
   return coordinates;
 };
-
 
 /**
  * Render an SVG icon from geospatial coordinates
@@ -36,24 +34,16 @@ const IconFromCoordinates = ({ coordinates, type, width, height }) => {
 
   const [west, south, east, north] = geojsonExtent({ type: 'Point', coordinates });
 
-  const scaleToSVG = (num, min, max, scaledMax = width, scaledMin = 0) => (
-    (((scaledMax - scaledMin) * (num - min)) / (max - min)) + scaledMin
-  );
+  const scaleToSVG = (num, min, max, scaledMax = width, scaledMin = 0) =>
+    ((scaledMax - scaledMin) * (num - min)) / (max - min) + scaledMin;
 
-  const coordinatesToSVG = getCoordinatesFromType(type, coordinates).map(coordinate => (
-    coordinate.map(subCoordinate => (
-      subCoordinate.map((item, i) => (
-        i
-          ? scaleToSVG(
-            (north - (item - south)),
-            south,
-            north,
-            height,
-          )
-          : scaleToSVG(item, west, east)
-      ))
-    ))
-  ));
+  const coordinatesToSVG = getCoordinatesFromType(type, coordinates).map(coordinate =>
+    coordinate.map(subCoordinate =>
+      subCoordinate.map((item, i) =>
+        i ? scaleToSVG(north - (item - south), south, north, height) : scaleToSVG(item, west, east)
+      )
+    )
+  );
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
@@ -66,9 +56,7 @@ const IconFromCoordinates = ({ coordinates, type, width, height }) => {
 };
 
 IconFromCoordinates.propTypes = {
-  coordinates: PropTypes.arrayOf(PropTypes.oneOfType([
-    PropTypes.number, PropTypes.array,
-  ])),
+  coordinates: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.array])),
   type: PropTypes.oneOf(Object.values(geomTypes)),
   width: PropTypes.number,
   height: PropTypes.number,
