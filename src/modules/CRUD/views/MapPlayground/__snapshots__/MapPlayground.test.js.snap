@@ -2,7 +2,7 @@
 
 exports[`should redirect to the first layer 1`] = `
 <div
-  to="/CRUD/map/layerTest"
+  to="/map/layerTest"
 >
   Redirect
 </div>
@@ -10,7 +10,7 @@ exports[`should redirect to the first layer 1`] = `
 
 exports[`snapshots should display loading 1`] = `
 <div
-  to="/CRUD/map/layerTest"
+  to="/map/layerTest"
 >
   Redirect
 </div>

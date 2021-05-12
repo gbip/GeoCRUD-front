@@ -12,7 +12,7 @@ exports[`should render correctly with maximize icon 1`] = `
   />
   <div
     title="CRUD.details.close"
-    to="/CRUD/map/fooLayer%20"
+    to="/map/fooLayer%20"
   >
     <span
       className="bp3-button bp3-minimal"
@@ -37,7 +37,7 @@ exports[`should render correctly with minimize icon 1`] = `
   />
   <div
     title="CRUD.details.close"
-    to="/CRUD/map/fooLayer%20"
+    to="/map/fooLayer%20"
   >
     <span
       className="bp3-button bp3-minimal"

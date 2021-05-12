@@ -4,14 +4,8 @@ exports[`should render correctly 1`] = `
 <main
   className="main-content"
 >
-  <p>
-    Module Foo
-  </p>
-  <p>
-    Module Bar
-  </p>
   <div>
-    Loading
+    GeoCrud
   </div>
 </main>
 `;
