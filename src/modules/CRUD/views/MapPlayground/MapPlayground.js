@@ -15,7 +15,6 @@ import { TABLE_MEDIUM } from '../../services/UserSettingsProvider';
 import { generateURI } from '../../config';
 import { toast } from '../../../../utils/toast';
 
-
 import './styles.scss';
 
 export class MapPlayground extends React.Component {
@@ -29,7 +28,6 @@ export class MapPlayground extends React.Component {
       }),
     }),
     settings: PropTypes.shape({}),
-    settingsEndpoint: PropTypes.string,
     tableSize: PropTypes.string,
   };
 
@@ -42,33 +40,30 @@ export class MapPlayground extends React.Component {
       },
     },
     settings: undefined,
-    settingsEndpoint: undefined,
     tableSize: TABLE_MEDIUM,
-  }
+  };
 
   state = {
     tableTransitioned: TABLE_MEDIUM,
-  }
+  };
 
-  componentDidMount () {
-    const {
-      getSettings,
-      settingsEndpoint,
-      settings,
-    } = this.props;
+  componentDidMount() {
+    const { getSettings, settings } = this.props;
 
     if (!settings) {
-      getSettings(settingsEndpoint);
+      getSettings();
     }
   }
 
   onTableHoverCell = (featureId, hover = true) => {
     const {
       featureToHighlight,
-      match: { params: { layer } },
+      match: {
+        params: { layer },
+      },
     } = this.props;
     featureToHighlight({ layer, featureId, hover });
-  }
+  };
 
   onTableTransitionedEnd = event => {
     event.preventDefault();
@@ -77,7 +72,9 @@ export class MapPlayground extends React.Component {
     }
 
     const {
-      match: { params: { id } },
+      match: {
+        params: { id },
+      },
       tableSize,
     } = this.props;
 
@@ -90,16 +87,18 @@ export class MapPlayground extends React.Component {
         tableTransitioned: nextTableTransitioned,
       };
     });
-  }
+  };
 
-  render () {
+  render() {
     const { tableTransitioned } = this.state;
 
     const {
       dataTableRef,
       detailsRef,
       settings,
-      match: { params: { layer, id } },
+      match: {
+        params: { layer, id },
+      },
       t,
       tableSize,
       errors,
@@ -133,40 +132,27 @@ export class MapPlayground extends React.Component {
 
     return (
       <>
-        <DetailsWrapper detailsRef={detailsRef}>
-          {areDetailsVisible && (
-            <Details />
-          )}
-        </DetailsWrapper>
+        <DetailsWrapper detailsRef={detailsRef}>{areDetailsVisible && <Details />}</DetailsWrapper>
 
         <div
-          className={classnames(
-            {
-              'CRUD-map': true,
-              [`CRUD-map--with-table-${tableSize}`]: layer && !areDetailsVisible,
-            },
-          )}
+          className={classnames({
+            'CRUD-map': true,
+            [`CRUD-map--with-table-${tableSize}`]: layer && !areDetailsVisible,
+          })}
         >
-          <Map
-            triggerFitBound={tableTransitioned}
-          />
+          <Map triggerFitBound={tableTransitioned} />
         </div>
 
         <div
           ref={dataTableRef}
           onTransitionEnd={this.onTableTransitionedEnd}
-          className={classnames(
-            {
-              'CRUD-table': true,
-              'CRUD-table--active': layer && !areDetailsVisible,
-              [`CRUD-table--${tableSize}`]: layer && !areDetailsVisible,
-            },
-          )}
+          className={classnames({
+            'CRUD-table': true,
+            'CRUD-table--active': layer && !areDetailsVisible,
+            [`CRUD-table--${tableSize}`]: layer && !areDetailsVisible,
+          })}
         >
-          <DataTable
-            layerName={layer}
-            onHoverCell={this.onTableHoverCell}
-          />
+          <DataTable layerName={layer} onHoverCell={this.onTableHoverCell} />
         </div>
       </>
     );

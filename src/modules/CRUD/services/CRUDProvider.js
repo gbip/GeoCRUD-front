@@ -19,6 +19,8 @@ const { Provider } = CRUDContext;
 
 const PAGE_SIZE = 999;
 
+const SETTINGS_ENDPOINT = '/api/crud/settings/';
+
 export class CRUDProvider extends React.Component {
   state = {
     settings: undefined,
@@ -37,16 +39,16 @@ export class CRUDProvider extends React.Component {
 
   detailsRef = React.createRef();
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.isUnmount = true;
   }
 
   setMap = map => !this.isUnmount && this.setState({ map });
 
-  getSettings = async endpoint => {
+  getSettings = async () => {
     const result = {};
     try {
-      const settings = await fetchSettings(endpoint);
+      const settings = await fetchSettings(SETTINGS_ENDPOINT);
       result.settings = settings;
     } catch (e) {
       result.error = e;
@@ -63,40 +65,36 @@ export class CRUDProvider extends React.Component {
     }));
 
     return settings;
-  }
+  };
 
-  getFormattedError = ({
-    store,
-    error,
-    ids,
-  }) => {
-    const { errors: { [store]: errorStore } } = this.state;
+  getFormattedError = ({ store, error, ids }) => {
+    const {
+      errors: { [store]: errorStore },
+    } = this.state;
 
     const propsFromIds = Object.keys(ids);
 
     // Remove error if it was before in the store
     if (!(error instanceof Error)) {
-      return errorStore.filter(errorItem => (
-        propsFromIds.every(prop => errorItem[prop] !== ids[prop])
-      ));
+      return errorStore.filter(errorItem =>
+        propsFromIds.every(prop => errorItem[prop] !== ids[prop]),
+      );
     }
 
     // Modify error if it was before in the store
-    const isErrorItemAlreadyExisting = errorStore.some(errorItem => (
-      propsFromIds.every(prop => errorItem[prop] === ids[prop])
-    ));
+    const isErrorItemAlreadyExisting = errorStore.some(errorItem =>
+      propsFromIds.every(prop => errorItem[prop] === ids[prop]),
+    );
 
     if (isErrorItemAlreadyExisting) {
-      return errorStore.map(errorItem => (
-        propsFromIds.every(prop => errorItem[prop] === ids[prop])
-          ? { error, ...ids }
-          : errorItem
-      ));
+      return errorStore.map(errorItem =>
+        propsFromIds.every(prop => errorItem[prop] === ids[prop]) ? { error, ...ids } : errorItem,
+      );
     }
 
     // Else add error in the store
     return [...errorStore, { error, ...ids }];
-  }
+  };
 
   getFeaturesList = async (layerId, querystring) => {
     const result = {};
@@ -138,7 +136,7 @@ export class CRUDProvider extends React.Component {
     }));
 
     return Object.keys(newFeature).length > 0 && newFeature;
-  }
+  };
 
   saveFeature = async (layerId, featureId, data, method = 'PUT') => {
     const result = {};
@@ -160,7 +158,7 @@ export class CRUDProvider extends React.Component {
     }));
 
     return result;
-  }
+  };
 
   deleteFeature = async (layerId, featureId) => {
     const result = {};
@@ -183,7 +181,7 @@ export class CRUDProvider extends React.Component {
     }));
 
     return feature;
-  }
+  };
 
   getAttachmentCategories = async endpoint => {
     const { attachmentCategories } = this.state;
@@ -211,7 +209,7 @@ export class CRUDProvider extends React.Component {
     }));
 
     return nextAttachmentCategories;
-  }
+  };
 
   createAttachmentCategories = async name => {
     const result = {};
@@ -239,7 +237,7 @@ export class CRUDProvider extends React.Component {
     }));
 
     return Object.keys(newCategory).length > 0 && newCategory;
-  }
+  };
 
   findOrCreateAttachmentCategory = async category => {
     const { name, id } = category;
@@ -249,9 +247,7 @@ export class CRUDProvider extends React.Component {
     const {
       attachmentCategories = [],
       settings: {
-        config: {
-          attachment_categories: endpoint,
-        },
+        config: { attachment_categories: endpoint },
       },
     } = this.state;
     let categories = attachmentCategories;
@@ -259,17 +255,17 @@ export class CRUDProvider extends React.Component {
       const { results } = await this.getAttachmentCategories(endpoint);
       categories = results;
     }
-    const categoryInList = categories.find(cat => (
-        cat?.name.toLowerCase() === name.trim().toLowerCase()
-    ));
+    const categoryInList = categories.find(
+      cat => cat?.name.toLowerCase() === name.trim().toLowerCase(),
+    );
     if (categoryInList !== undefined) {
       return categoryInList;
     }
     const newCategory = await this.createAttachmentCategories(name);
     return newCategory;
-  }
+  };
 
-  render () {
+  render() {
     const { children } = this.props;
 
     const {
@@ -300,11 +296,7 @@ export class CRUDProvider extends React.Component {
       setMap,
     };
 
-    return (
-      <Provider value={value}>
-        {children}
-      </Provider>
-    );
+    return <Provider value={value}>{children}</Provider>;
   }
 }
 
