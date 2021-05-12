@@ -1,27 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import {
-  Navbar,
-  NavbarGroup,
-  NavbarHeading,
-  Classes,
-} from '@blueprintjs/core';
+import { Navbar, NavbarGroup, NavbarHeading, Classes } from '@blueprintjs/core';
 
 import UserDropdown from '../UserDropdown';
-import MenuDropdown from '../MenuDropdown';
 // import LangDropdown from '../LangDropdown';
 
 import './header.scss';
 
-const Logo = ({
-  t,
-  title = t('main.title'),
-  logo: {
-    src = undefined,
-    alt = title,
-  },
-}) => {
+const Logo = ({ t, title = t('main.title'), logo: { src = undefined, alt = title } }) => {
   if (!src) {
     return <span>{alt}</span>;
   }
@@ -40,13 +27,12 @@ export const Header = ({ authenticated, heading, ...props }) => (
       </NavbarGroup>
       {heading && (
         <NavbarGroup>
-          { /* eslint-disable-next-line react/no-danger */ }
+          {/* eslint-disable-next-line react/no-danger */}
           <div dangerouslySetInnerHTML={{ __html: heading }} />
         </NavbarGroup>
       )}
       {authenticated && (
         <NavbarGroup align="right">
-          <MenuDropdown />
           <UserDropdown />
         </NavbarGroup>
       )}
