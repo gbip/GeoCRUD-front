@@ -6,7 +6,8 @@ import { withTranslation } from 'react-i18next';
 const ErrorView = ({ t, error: { code } }) => (
   <div>
     <H1>{t('common.error.title', { context: `${code}` })}</H1>
-    <p><strong>{t('common.error.text', { context: `${code}` })}</strong>
+    <p>
+      <strong>{t('common.error.text', { context: `${code}` })}</strong>
       <Link to="/">{t('common.error.link', { context: `${code}` })}</Link>
     </p>
   </div>
