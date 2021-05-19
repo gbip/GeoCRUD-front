@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, FormGroup, Menu, MenuDivider, MenuItem, Position } from '@blueprintjs/core';
 import { remove } from 'diacritics';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Suggest } from '@blueprintjs/select';
 import { CRUDContext } from '../../../../../services/CRUDProvider';
 import './styles.scss';
