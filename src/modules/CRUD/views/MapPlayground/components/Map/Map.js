@@ -156,12 +156,11 @@ const Map = ({ displayViewFeature, triggerFitBound }) => {
       return;
     }
 
-    const nextSource =  getSources(settings).find(source => source.id === `${layerId}`);
+    const nextSource = getSources(settings).find(source => source.id === `${layerId}`);
     setSources(prevSources => [...prevSources, nextSource]);
 
     const nextLayers = getLayers(settings)
       .filter(({ source }) => source === `${layerId}`)
-      .reverse()
       .map(nextLayer => ({ ...nextLayer, weight: CUSTOM_LAYER_WEIGHT }));
 
     nextLayers.forEach(({ layout: { 'icon-image': iconImage } = {} }) => {
