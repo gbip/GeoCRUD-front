@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Button, FormGroup, Menu, MenuDivider, MenuItem, Position } from '@blueprintjs/core';
 import { remove } from 'diacritics';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Suggest } from '@blueprintjs/select';
 import { CRUDContext } from '../../../../../services/CRUDProvider';
 import './styles.scss';
@@ -29,6 +28,7 @@ const CategorySelector = ({ attachments, attachment, onSubmit }) => {
     },
   } = useContext(CRUDContext);
 
+  const selectRef = useRef();
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -66,11 +66,7 @@ const CategorySelector = ({ attachments, attachment, onSubmit }) => {
     onSubmit(selectedCategory);
   }, [onSubmit, selectedCategory]);
 
-  const createNewItemRenderer = (
-    query,
-    active,
-    handleClick,
-  ) => (
+  const createNewItemRenderer = (query, active, handleClick) => (
     <MenuItem
       icon="add"
       text={t('CRUD.details.attachment.category.create', { name: query })}
@@ -88,7 +84,7 @@ const CategorySelector = ({ attachments, attachment, onSubmit }) => {
     />
   );
 
-  const itemListRenderer = ({ filteredItems, renderItem, renderCreateItem }) => {
+  const itemListRenderer = ({ filteredItems, renderItem, itemsParentRef, query }) => {
     const filteredItemsByGroupTitle = filteredItems.reduce((acc, item) => {
       if (acc[item.title]) {
         acc[item.title].push(item);
@@ -99,13 +95,18 @@ const CategorySelector = ({ attachments, attachment, onSubmit }) => {
     }, {});
     if (Object.values(filteredItemsByGroupTitle).length) {
       return Object.entries(filteredItemsByGroupTitle).map(([key, value]) => (
-        <Menu key={key}>
+        <Menu key={key} ulRef={itemsParentRef}>
           <MenuDivider title={key} />
           {value.map(renderItem)}
         </Menu>
       ));
     }
-    return <Menu>{renderCreateItem()}</Menu>;
+
+    const queryList = selectRef.current?.queryList;
+    const createItemView = queryList?.isCreateItemRendered()
+      ? queryList.renderCreateItemMenuItem(query.trim())
+      : null;
+    return <Menu ulRef={itemsParentRef}>{createItemView}</Menu>;
   };
 
   const itemPredicate = (query, option, _index, exactMatch) => {
@@ -148,6 +149,7 @@ const CategorySelector = ({ attachments, attachment, onSubmit }) => {
               position: Position.BOTTOM,
               popoverClassName: 'category-selector__suggestions',
             }}
+            ref={selectRef}
           />
         </FormGroup>
         <Button
