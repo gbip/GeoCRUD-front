@@ -68,10 +68,10 @@ const Edit = ({
     if (isGeom) {
       return sanitizeValue(schema, displayValue);
     }
-    const { properties } = feature[id] || {};
+    const { properties = {} } = feature[id] || {};
     const propertiesListed = Object.values(properties).reduce(
-      (list, item) => ({ ...list, ...item }
-      ), {},
+      (list, item) => ({ ...list, ...item }),
+      {},
     );
     return sanitizeValue(schema, propertiesListed[name]);
   }, [displayValue, feature, id, isGeom, name, schema]);
@@ -85,7 +85,7 @@ const Edit = ({
   const isMounted = useRef(true);
 
   const isCurrentEditedItem = editedItem === name;
-  const canEdit =  ['', name].includes(editedItem) && editable;
+  const canEdit = ['', name].includes(editedItem) && editable;
   const isEdited = canEdit && isCurrentEditedItem;
   const [loading, setLoading] = useState(false);
   const [defaultValue, setDefaultValue] = useState(value);
@@ -164,7 +164,7 @@ const Edit = ({
   ]);
 
   const requiredField = useMemo(() => {
-    const { required }  = requiredProperties(schemaProperties);
+    const { required } = requiredProperties(schemaProperties);
     return required.includes(name);
   }, [name, schemaProperties]);
 
@@ -177,8 +177,8 @@ const Edit = ({
     }
     if (!editable) {
       return {
-        label:  t('CRUD.details.notAllowedToEdit'),
-        icon:  'info-sign',
+        label: t('CRUD.details.notAllowedToEdit'),
+        icon: 'info-sign',
       };
     }
     return {
