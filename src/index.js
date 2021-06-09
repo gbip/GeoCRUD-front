@@ -34,6 +34,7 @@ if (REACT_APP_SENTRY_DSN !== undefined) {
         }),
       ],
     });
+    global.Sentry = Sentry;
   })();
 }
 
