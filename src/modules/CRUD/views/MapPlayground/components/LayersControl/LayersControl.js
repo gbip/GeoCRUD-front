@@ -41,14 +41,14 @@ export class LayersControl extends AbstractMapControl {
     this.orderedRelations();
   }
 
-  componentDidMUpdate ({ relations: prevRelations }) {
+  componentDidMUpdate({ relations: prevRelations }) {
     const { relations } = this.props;
     if (prevRelations !== relations) {
       this.orderedRelations();
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { map, relations } = this.props;
     relations.forEach(({ crud_view_pk: id }) => {
       const layerId = this.getRelationLayerID(id);
@@ -60,11 +60,15 @@ export class LayersControl extends AbstractMapControl {
 
   orderedRelations = () => {
     const { map, relations } = this.props;
+    if (!relations.length) {
+      return;
+    }
     const orderedRelations = relations
       .sort((a, b) => a.order - b.order)
       .map(({ label, crud_view_pk: id, geojson, empty = false }) => {
         const layerId = this.getRelationLayerID(id);
-        const defaultChecked = map.getSource(layerId) && map.getLayoutProperty(layerId, 'visibility') === 'visible';
+        const defaultChecked =
+          map.getSource(layerId) && map.getLayoutProperty(layerId, 'visibility') === 'visible';
         return {
           defaultChecked,
           disabled: empty,
@@ -74,16 +78,16 @@ export class LayersControl extends AbstractMapControl {
         };
       });
     this.setState({ orderedRelations });
-  }
+  };
 
   onChange = ({ target: { value, checked } }) => {
     this.setLayoutProperty(value, checked);
-  }
+  };
 
   getRelationLayerID = id => {
     const { featureID } = this.props;
     return `CRUD-${featureID}-relation-${id}`;
-  }
+  };
 
   onChangeRelation = async ({ target: { value, checked } }, geojson) => {
     const { map, getMapStyle, layers } = this.props;
@@ -105,25 +109,28 @@ export class LayersControl extends AbstractMapControl {
         type: 'geojson',
         data,
       });
-      map.addLayer({
-        id: currentSourceAndLayerID,
-        source: currentSourceAndLayerID,
-        ...getMapStyle(Number(value)),
-      }, layers?.[0].id);
+      map.addLayer(
+        {
+          id: currentSourceAndLayerID,
+          source: currentSourceAndLayerID,
+          ...getMapStyle(Number(value)),
+        },
+        layers?.[0].id,
+      );
     }
     map.setLayoutProperty(currentSourceAndLayerID, 'visibility', 'visible');
-  }
+  };
 
   setLayoutProperty = (layerId, isVisible) => {
     const { map } = this.props;
     map.setLayoutProperty(layerId, 'visibility', isVisible ? 'visible' : 'none');
-  }
+  };
 
   onClosing = () => {
     this.forceUpdate();
-  }
+  };
 
-  render () {
+  render() {
     const { layers, map, translate } = this.props;
     const { orderedRelations } = this.state;
 
@@ -132,18 +139,16 @@ export class LayersControl extends AbstractMapControl {
     }
 
     return (
-      <Tooltip
-        content={translate('CRUD.map.controls.layers.label')}
-        className="layerGroup"
-      >
+      <Tooltip content={translate('CRUD.map.controls.layers.label')} className="layerGroup">
         <Popover
           className="popoverPos"
           onClosing={this.onClosing}
           position={Position.BOTTOM_LEFT}
-          content={(
+          content={
             <div className="radioGroup layerGroup__item">
               {layers.map(({ title, id, empty = false }) => {
-                const defaultChecked = !empty && map.getLayoutProperty(id, 'visibility') === 'visible';
+                const defaultChecked =
+                  !empty && map.getLayoutProperty(id, 'visibility') === 'visible';
                 return (
                   <Checkbox
                     className="bgLayer-radio"
@@ -169,7 +174,7 @@ export class LayersControl extends AbstractMapControl {
                 />
               ))}
             </div>
-          )}
+          }
         >
           <button
             className="mapboxgl-ctrl-icon"
@@ -180,7 +185,6 @@ export class LayersControl extends AbstractMapControl {
           </button>
         </Popover>
       </Tooltip>
-
     );
   }
 }
