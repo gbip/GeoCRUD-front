@@ -10,11 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: dcodeIO/setup-node-nvm@master
+
       - name: Install dependencies
         run: |
-          nvm use
           npm ci
 
-      - name: Run tests
+      - name: ESlint
         run: |
           npm run lint
