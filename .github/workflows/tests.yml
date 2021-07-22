@@ -4,9 +4,10 @@ on:
   push:
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
-
+    env:
+      CI: true
     steps:
       - uses: actions/checkout@v2
 
@@ -22,6 +23,6 @@ jobs:
         run: |
           npm ci
 
-      - name: ESlint
+      - name: Test
         run: |
-          npm run lint
+          npm run test
