@@ -24,5 +24,6 @@ jobs:
           npm ci
 
       - name: ESlint
+        continue-on-error: true
         run: |
           npm run lint
