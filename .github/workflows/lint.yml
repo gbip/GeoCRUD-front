@@ -24,6 +24,5 @@ jobs:
           npm ci --cache ~/.npm --prefer-offline --no-audit
 
       - name: ESlint
-        continue-on-error: true
         run: |
           npm run lint
