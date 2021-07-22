@@ -25,9 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          npm set cache ~/.npm
           npm ci --prefer-offline --no-audit
 
       - name: ESlint
-        continue-on-error: true
         run: |
           npm run lint
