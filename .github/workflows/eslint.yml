@@ -1,13 +1,12 @@
-name: Unit tests
+name: Lint
 
 on:
   push:
 
 jobs:
-  test:
+  eslint:
     runs-on: ubuntu-latest
-    env:
-      CI: true
+
     steps:
       - uses: actions/checkout@v2
 
@@ -22,12 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm set cache ~/.npm
-          npm ci --prefer-offline --no-audit
+          npm ci --cache ~/.npm --prefer-offline --no-audit
 
-      - name: Test
+      - name: ESlint
         run: |
-          npm run test -- --coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+          npm run lint
