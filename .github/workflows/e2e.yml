@@ -23,6 +23,10 @@ jobs:
         run: |
           npm ci --cache ~/.npm --prefer-offline --no-audit
 
+      - name: Build front
+        run: |
+          npm run build
+
       - name: Launch backend
         run: |
           wget https://raw.githubusercontent.com/Terralego/GeoCRUD/master/.env.dist -O .env
@@ -31,7 +35,7 @@ jobs:
           sed -i.bak 's/^\(POSTGRES_PASSWORD=\).*/\1test/' .env
           sed -i 's,DOMAIN_NAME=127.0.0.1,DOMAIN_NAME=front,' .env
           docker-compose run --rm django ./manage.py migrate
-          docker-compose up -d
+          docker-compose up django -d
           docker-compose run --rm django ./manage.py loaddata /app/public/data/fixtures/e2e.json
           docker-compose run --rm django ./manage.py loaddata /app/public/data/fixtures/demo.json
 
