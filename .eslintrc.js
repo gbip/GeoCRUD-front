@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['react-app', 'makina'],
+  extends: ['react-app', 'makina', 'prettier'],
 
   // Custom rules
   rules: {
