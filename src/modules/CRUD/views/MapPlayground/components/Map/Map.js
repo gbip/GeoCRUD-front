@@ -147,7 +147,6 @@ const Map = ({ displayViewFeature, triggerFitBound }) => {
 
     const {
       layer: { id: layerId },
-      pictogram,
     } = view;
 
     if (sources.find(source => source.id === `${layerId}`) && layers.filter(({ source }) => source === `${layerId}`)) {
@@ -165,10 +164,17 @@ const Map = ({ displayViewFeature, triggerFitBound }) => {
 
     nextLayers.forEach(({ layout: { 'icon-image': iconImage } = {} }) => {
       if (iconImage) {
-        map.loadImage(pictogram, (error, image) => {
-          if (error) throw error;
-          map.addImage(iconImage, image);
-        });
+        let imgs = [iconImage];
+        // Is in mapbox expression
+        if(Array.isArray(iconImage)) {
+          imgs = iconImage.filter(expression => typeof expression === "string" && expression.startsWith("https"))
+        }
+        imgs.forEach(img => {
+          map.loadImage(img, (error, image) => {
+              if (error) throw error;
+              map.addImage(img, image);
+            });
+        })
       }
     });
 
